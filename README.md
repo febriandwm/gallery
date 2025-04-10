@@ -21,13 +21,7 @@ A simple web-based gallery application built with Nginx, Docker, and a JSON data
 ├── detail.html
 ├── api.js
 ├── database.json
-└── images/
-    ├── beach/
-    ├── mountain/
-    ├── forest/
-    ├── desert/
-    ├── city/
-    └── ...other categories
+
 ```
 
 ## Prerequisites
