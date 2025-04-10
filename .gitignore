@@ -25,4 +25,12 @@ npm-debug.log*
 
 # Build output
 dist/
-build/ 
+build/
+
+# Images
+images/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp 
