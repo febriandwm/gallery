@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modern Gallery Viewer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script type="module">
+    import imageAPI from './api.js';
+    
+    const cardsPerPage = 8;
+    let currentPage = 1;
+    let filteredCards = [];
+    let selectedCategory = 'all';
+
+    async function renderCards() {
+      const container = document.getElementById("cardContainer");
+      container.innerHTML = "";
+
+      const start = (currentPage - 1) * cardsPerPage;
+      const end = start + cardsPerPage;
+      const cardsToShow = filteredCards.slice(start, end);
+
+      for (const card of cardsToShow) {
+        container.innerHTML += `
+          <div class="gallery-card bg-gray-800 rounded-xl overflow-hidden cursor-pointer" onclick="navigateToDetail('${card.title}')">
+            <div class="relative aspect-square bg-gradient-to-br from-blue-500 to-purple-600">
+              <img src="${card.thumbnail}" alt="${card.title}" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-black/20 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                <span class="text-white text-lg font-medium">View Details</span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-center">${card.title}</h3>
+              <p class="text-sm text-gray-400 text-center">${card.category}</p>
+            </div>
+          </div>
+        `;
+      }
+
+      document.getElementById("currentPage").textContent = currentPage;
+      document.getElementById("prevBtn").disabled = currentPage === 1;
+      document.getElementById("nextBtn").disabled = currentPage * cardsPerPage >= filteredCards.length;
+    }
+
+    async function loadGalleryItems() {
+      try {
+        const items = await imageAPI.getAllGalleryItems();
+        filteredCards = items;
+        renderCards();
+        updateCategoryButtons();
+      } catch (error) {
+        console.error('Error loading gallery items:', error);
+      }
+    }
+
+    async function filterByCategory(category) {
+      selectedCategory = category;
+      const items = await imageAPI.getAllGalleryItems();
+      if (category === 'all') {
+        filteredCards = items;
+      } else {
+        filteredCards = items.filter(item => item.category.toLowerCase() === category.toLowerCase());
+      }
+      currentPage = 1;
+      renderCards();
+      updateCategoryButtons();
+    }
+
+    function updateCategoryButtons() {
+      const buttons = document.querySelectorAll('.category-btn');
+      buttons.forEach(btn => {
+        if (btn.dataset.category === selectedCategory) {
+          btn.classList.add('bg-blue-600', 'text-white');
+          btn.classList.remove('bg-gray-800', 'text-gray-400');
+        } else {
+          btn.classList.remove('bg-blue-600', 'text-white');
+          btn.classList.add('bg-gray-800', 'text-gray-400');
+        }
+      });
+    }
+
+    async function handleSearch() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const items = await imageAPI.getAllGalleryItems();
+      filteredCards = items.filter(item => 
+        item.title.toLowerCase().includes(input) || 
+        item.category.toLowerCase().includes(input)
+      );
+      if (selectedCategory !== 'all') {
+        filteredCards = filteredCards.filter(item => item.category.toLowerCase() === selectedCategory.toLowerCase());
+      }
+      currentPage = 1;
+      renderCards();
+    }
+
+    function clearSearch() {
+      document.getElementById("searchInput").value = '';
+      loadGalleryItems();
+    }
+
+    function nextPage() {
+      if (currentPage * cardsPerPage < filteredCards.length) {
+        currentPage++;
+        renderCards();
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderCards();
+      }
+    }
+
+    function navigateToDetail(title) {
+      localStorage.setItem('selectedCard', title);
+      window.location.href = 'detail.html';
+    }
+
+    // Initial load
+    loadGalleryItems();
+
+    // Make functions available globally
+    window.handleSearch = handleSearch;
+    window.clearSearch = clearSearch;
+    window.nextPage = nextPage;
+    window.prevPage = prevPage;
+    window.navigateToDetail = navigateToDetail;
+    window.filterByCategory = filterByCategory;
+  </script>
+  <style>
+    .gallery-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .gallery-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    .search-container {
+      backdrop-filter: blur(10px);
+    }
+    .category-btn {
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen text-white">
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md px-6 py-4">
+    <div class="flex justify-between items-center mb-4">
+      <div class="text-2xl font-bold tracking-widest">GALLERY</div>
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <input 
+            type="text" 
+            id="searchInput"
+            placeholder="Search images..." 
+            class="bg-gray-800/50 text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+            oninput="handleSearch()"
+          />
+          <button 
+            onclick="clearSearch()" 
+            class="absolute right-3 top-2.5 text-gray-400 hover:text-white cursor-pointer"
+          ><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+    </div>
+    <!-- Category Filters -->
+    <div class="flex justify-center items-center gap-4">
+      <button 
+        onclick="filterByCategory('all')" 
+        class="category-btn bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors"
+        data-category="all"
+      >
+        All
+      </button>
+      <button 
+        onclick="filterByCategory('Nature')" 
+        class="category-btn bg-gray-800 text-gray-400 px-4 py-2 rounded-full hover:bg-gray-700 transition-colors"
+        data-category="Nature"
+      >
+        Nature
+      </button>
+      <button 
+        onclick="filterByCategory('Urban')" 
+        class="category-btn bg-gray-800 text-gray-400 px-4 py-2 rounded-full hover:bg-gray-700 transition-colors"
+        data-category="Urban"
+      >
+        Urban
+      </button>
+    </div>
+  </nav>
+
+  <!-- Grid -->
+  <main class="pt-32 pb-16 px-4 sm:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="cardContainer">
+    <!-- Cards will be injected here via JavaScript -->
+  </main>
+
+  <!-- Pagination -->
+  <div class="fixed bottom-0 left-0 right-0 bg-gray-900/80 backdrop-blur-md py-4">
+    <div class="flex justify-center items-center space-x-4">
+      <button onclick="prevPage()" class="bg-gray-800 px-4 py-2 rounded-full text-white hover:bg-gray-700 disabled:opacity-50 transition-colors" id="prevBtn">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span class="text-white font-semibold">Page <span id="currentPage">1</span></span>
+      <button onclick="nextPage()" class="bg-gray-800 px-4 py-2 rounded-full text-white hover:bg-gray-700 disabled:opacity-50 transition-colors" id="nextBtn">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</body>
+</html>

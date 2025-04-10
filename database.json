@@ -1,0 +1,346 @@
+{
+  "images": [
+    {
+      "id": 1,
+      "title": "Sunset",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "sunset1",
+          "url": "images/beach/Screenshot (6).png"
+        },
+        {
+          "id": "sunset2",
+          "url": "images/beach/Screenshot (10).png"
+        },
+        {
+          "id": "sunset3",
+          "url": "images/beach/Screenshot (11).png"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Beach",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "beach1",
+          "url": "images/beach/beach1.jpg"
+        },
+        {
+          "id": "beach2",
+          "url": "images/beach/beach2.jpg"
+        },
+        {
+          "id": "beach3",
+          "url": "images/beach/beach3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Mountain",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "mountain1",
+          "url": "images/mountain/mountain1.jpg"
+        },
+        {
+          "id": "mountain2",
+          "url": "images/mountain/mountain2.jpg"
+        },
+        {
+          "id": "mountain3",
+          "url": "images/mountain/mountain3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Forest",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "forest1",
+          "url": "images/forest/forest1.jpg"
+        },
+        {
+          "id": "forest2",
+          "url": "images/forest/forest2.jpg"
+        },
+        {
+          "id": "forest3",
+          "url": "images/forest/forest3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Desert",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "desert1",
+          "url": "images/desert/desert1.jpg"
+        },
+        {
+          "id": "desert2",
+          "url": "images/desert/desert2.jpg"
+        },
+        {
+          "id": "desert3",
+          "url": "images/desert/desert3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "City",
+      "category": "Urban",
+      "images": [
+        {
+          "id": "city1",
+          "url": "images/city/city1.jpg"
+        },
+        {
+          "id": "city2",
+          "url": "images/city/city2.jpg"
+        },
+        {
+          "id": "city3",
+          "url": "images/city/city3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Skyline",
+      "category": "Urban",
+      "images": [
+        {
+          "id": "skyline1",
+          "url": "images/skyline/skyline1.jpg"
+        },
+        {
+          "id": "skyline2",
+          "url": "images/skyline/skyline2.jpg"
+        },
+        {
+          "id": "skyline3",
+          "url": "images/skyline/skyline3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "River",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "river1",
+          "url": "images/river/river1.jpg"
+        },
+        {
+          "id": "river2",
+          "url": "images/river/river2.jpg"
+        },
+        {
+          "id": "river3",
+          "url": "images/river/river3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Canyon",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "canyon1",
+          "url": "images/canyon/canyon1.jpg"
+        },
+        {
+          "id": "canyon2",
+          "url": "images/canyon/canyon2.jpg"
+        },
+        {
+          "id": "canyon3",
+          "url": "images/canyon/canyon3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Lake",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "lake1",
+          "url": "images/lake/lake1.jpg"
+        },
+        {
+          "id": "lake2",
+          "url": "images/lake/lake2.jpg"
+        },
+        {
+          "id": "lake3",
+          "url": "images/lake/lake3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Valley",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "valley1",
+          "url": "images/valley/valley1.jpg"
+        },
+        {
+          "id": "valley2",
+          "url": "images/valley/valley2.jpg"
+        },
+        {
+          "id": "valley3",
+          "url": "images/valley/valley3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Jungle",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "jungle1",
+          "url": "images/jungle/jungle1.jpg"
+        },
+        {
+          "id": "jungle2",
+          "url": "images/jungle/jungle2.jpg"
+        },
+        {
+          "id": "jungle3",
+          "url": "images/jungle/jungle3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Waterfall",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "waterfall1",
+          "url": "images/waterfall/waterfall1.jpg"
+        },
+        {
+          "id": "waterfall2",
+          "url": "images/waterfall/waterfall2.jpg"
+        },
+        {
+          "id": "waterfall3",
+          "url": "images/waterfall/waterfall3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Cave",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "cave1",
+          "url": "images/cave/cave1.jpg"
+        },
+        {
+          "id": "cave2",
+          "url": "images/cave/cave2.jpg"
+        },
+        {
+          "id": "cave3",
+          "url": "images/cave/cave3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Volcano",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "volcano1",
+          "url": "images/volcano/volcano1.jpg"
+        },
+        {
+          "id": "volcano2",
+          "url": "images/volcano/volcano2.jpg"
+        },
+        {
+          "id": "volcano3",
+          "url": "images/volcano/volcano3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Glacier",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "glacier1",
+          "url": "images/glacier/glacier1.jpg"
+        },
+        {
+          "id": "glacier2",
+          "url": "images/glacier/glacier2.jpg"
+        },
+        {
+          "id": "glacier3",
+          "url": "images/glacier/glacier3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Meadow",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "meadow1",
+          "url": "images/meadow/meadow1.jpg"
+        },
+        {
+          "id": "meadow2",
+          "url": "images/meadow/meadow2.jpg"
+        },
+        {
+          "id": "meadow3",
+          "url": "images/meadow/meadow3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "title": "Coast",
+      "category": "Nature",
+      "images": [
+        {
+          "id": "coast1",
+          "url": "images/coast/coast1.jpg"
+        },
+        {
+          "id": "coast2",
+          "url": "images/coast/coast2.jpg"
+        },
+        {
+          "id": "coast3",
+          "url": "images/coast/coast3.jpg"
+        }
+      ]
+    }
+  ]
+} 

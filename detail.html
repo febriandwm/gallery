@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery Detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script type="module">
+    import imageAPI from './api.js';
+
+    const selectedCard = localStorage.getItem('selectedCard');
+    let currentSlide = 0;
+    let images = [];
+    let slideInterval;
+
+    async function loadGalleryItem() {
+      try {
+        const item = await imageAPI.getGalleryItem(selectedCard);
+        if (item) {
+          document.getElementById('detailTitle').textContent = item.title;
+          document.getElementById('category').textContent = item.category;
+          images = item.images;
+          renderSlides();
+        }
+      } catch (error) {
+        console.error('Error loading gallery item:', error);
+      }
+    }
+
+    function renderSlides() {
+      const track = document.getElementById('sliderTrack');
+      const dots = document.getElementById('sliderDots');
+      
+      // Clear existing slides and dots
+      track.innerHTML = '';
+      dots.innerHTML = '';
+      
+      // Add slides
+      images.forEach((image, index) => {
+        track.innerHTML += `
+          <div class="w-full flex-shrink-0 aspect-video bg-gradient-to-br from-blue-500 to-purple-600 detail-image">
+            <img src="${image.url}" alt="${image.id}" class="w-full h-full object-cover cursor-zoom-in" onclick="openZoom('${image.url}')">
+          </div>
+        `;
+        
+        // Add dots
+        dots.innerHTML += `
+          <div class="slider-dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>
+        `;
+      });
+      
+      updateSliderPosition();
+      startAutoSlide();
+    }
+
+    function updateSliderPosition() {
+      const track = document.getElementById('sliderTrack');
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      // Update active dot
+      document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % images.length;
+      updateSliderPosition();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + images.length) % images.length;
+      updateSliderPosition();
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSliderPosition();
+    }
+
+    function startAutoSlide() {
+      clearInterval(slideInterval);
+      slideInterval = setInterval(nextSlide, 5000);
+    }
+
+    function openZoom(imageUrl) {
+      const modal = document.getElementById('zoomModal');
+      const modalImg = document.getElementById('zoomImage');
+      
+      // Find the index of the current image
+      const currentIndex = images.findIndex(img => img.url === imageUrl);
+      if (currentIndex !== -1) {
+        currentSlide = currentIndex;
+      }
+      
+      modalImg.src = imageUrl;
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      clearInterval(slideInterval);
+    }
+
+    function nextZoomImage() {
+      currentSlide = (currentSlide + 1) % images.length;
+      const modalImg = document.getElementById('zoomImage');
+      modalImg.src = images[currentSlide].url;
+      updateSliderPosition();
+    }
+
+    function prevZoomImage() {
+      currentSlide = (currentSlide - 1 + images.length) % images.length;
+      const modalImg = document.getElementById('zoomImage');
+      modalImg.src = images[currentSlide].url;
+      updateSliderPosition();
+    }
+
+    function closeZoom() {
+      const modal = document.getElementById('zoomModal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      startAutoSlide();
+    }
+
+    // Clear interval when user interacts with slider
+    document.querySelector('.slider-container').addEventListener('mouseenter', () => {
+      clearInterval(slideInterval);
+    });
+
+    document.querySelector('.slider-container').addEventListener('mouseleave', () => {
+      startAutoSlide();
+    });
+
+    function goBack() {
+      window.location.href = 'main.html';
+    }
+
+    // Make functions available globally
+    window.nextSlide = nextSlide;
+    window.prevSlide = prevSlide;
+    window.goToSlide = goToSlide;
+    window.goBack = goBack;
+    window.openZoom = openZoom;
+    window.closeZoom = closeZoom;
+    window.nextZoomImage = nextZoomImage;
+    window.prevZoomImage = prevZoomImage;
+
+    // Initial load
+    loadGalleryItem();
+
+    // Close zoom modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeZoom();
+      } else if (e.key === 'ArrowRight') {
+        nextZoomImage();
+      } else if (e.key === 'ArrowLeft') {
+        prevZoomImage();
+      }
+    });
+  </script>
+  <style>
+    .detail-image {
+      transition: transform 0.3s ease;
+    }
+    .detail-image:hover {
+      transform: scale(1.02);
+    }
+    .slider-container {
+      position: relative;
+      overflow: hidden;
+    }
+    .slider-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    .slider-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 1rem;
+      z-index: 10;
+    }
+    .slider-dots {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+    }
+    .slider-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .slider-dot.active {
+      background-color: white;
+    }
+    .zoom-modal {
+      transition: opacity 0.3s ease;
+    }
+    .zoom-content {
+      max-height: 90vh;
+      max-width: 90vw;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen text-white">
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md px-6 py-4 flex justify-between items-center">
+    <div class="text-2xl font-bold tracking-widest">GALLERY</div>
+    <button onclick="goBack()" class="bg-gray-800/50 px-4 py-2 rounded-full text-white hover:bg-gray-700 transition-colors flex items-center gap-2">
+      <i class="fas fa-arrow-left"></i>
+      Back to Gallery
+    </button>
+  </nav>
+
+  <!-- Detail Content -->
+  <main class="pt-24 pb-16 px-4 sm:px-8 max-w-6xl mx-auto">
+    <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden">
+      <div class="slider-container">
+        <div class="slider-track" id="sliderTrack">
+          <!-- Slides will be injected here -->
+        </div>
+        <div class="slider-nav">
+          <button onclick="prevSlide()" class="bg-gray-800/50 p-2 rounded-full text-white hover:bg-gray-700 transition-colors">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button onclick="nextSlide()" class="bg-gray-800/50 p-2 rounded-full text-white hover:bg-gray-700 transition-colors">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        <div class="slider-dots" id="sliderDots">
+          <!-- Dots will be injected here -->
+        </div>
+      </div>
+      <div class="p-8">
+        <h1 id="detailTitle" class="text-4xl font-bold mb-6 text-center"></h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="space-y-4">
+            <h2 class="text-2xl font-semibold">About This Image</h2>
+            <p class="text-gray-300 leading-relaxed">
+              This is a beautiful image from our gallery collection. Each image tells a unique story and captures a special moment in time.
+            </p>
+          </div>
+          <div class="space-y-4">
+            <h2 class="text-2xl font-semibold">Details</h2>
+            <div class="grid grid-cols-1 gap-4">
+              <div class="bg-gray-700/50 p-4 rounded-lg">
+                <p class="text-gray-400 text-sm">Category</p>
+                <p class="font-medium" id="category">Nature</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Zoom Modal -->
+  <div id="zoomModal" class="fixed inset-0 z-50 hidden bg-black/90 flex items-center justify-center zoom-modal">
+    <button onclick="closeZoom()" class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl bg-gray-800/50 p-3 rounded-full hover:bg-gray-700 transition-colors z-50">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="relative zoom-content">
+      <div class="relative">
+        <button onclick="prevZoomImage()" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 bg-gray-800/50 p-4 rounded-full text-white hover:bg-gray-700 transition-colors">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <img id="zoomImage" class="max-h-[90vh] max-w-[90vw] object-contain" src="" alt="">
+        <button onclick="nextZoomImage()" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 bg-gray-800/50 p-4 rounded-full text-white hover:bg-gray-700 transition-colors">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 
